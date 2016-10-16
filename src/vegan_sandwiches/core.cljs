@@ -3,26 +3,30 @@
             [quil.middleware :as m]))
 
 (def screens
-  {:intro "images/intro.jpg"
-   :instructions "images/start-screen.jpg" })
+  {:intro "images/intro.png"
+   :instructions "images/start-screen.png" })
 
 (defn setup []
   ; Set frame rate to 30 frames per second.
-  (q/frame-rate 30)
-  {:current-screen (:intro screens)})
+  (q/frame-rate 1)
+  {:current-screen :intro})
+
+(def load-image (memoize q/load-image))
 
 (defn update-state [state]
-  state)
+  (if (= (mod (q/frame-count) 2) 0)
+    (assoc state :current-screen :intro)
+    (assoc state :current-screen :instructions)))
 
 (defn draw-screen [screen]
-  (q/image (q/load-image screen) 0 0))
+  (q/image (load-image (screen screens)) 0 0 (q/width) (q/height)))
 
 (defn draw-state [state]
   (draw-screen (:current-screen state)))
 
 (q/defsketch vegan-sandwiches
   :host "vegan-sandwiches"
-  :size [500 500]
+  :size [600 400]
   ; setup function called only once, during sketch initialization.
   :setup setup
   ; update-state is called on each iteration before draw-state.
