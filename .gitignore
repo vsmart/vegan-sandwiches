@@ -2,5 +2,6 @@
 .DS_Store?
 out
 target
+js
 .lein-repl-history
 figwheel_server.log
