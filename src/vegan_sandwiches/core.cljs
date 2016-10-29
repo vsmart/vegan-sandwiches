@@ -7,16 +7,24 @@
    :instructions "images/start-screen.png" })
 
 (defn setup []
-  ; Set frame rate to 30 frames per second.
   (q/frame-rate 1)
   {:current-screen :intro})
 
 (def load-image (memoize q/load-image))
 
+(defn is-between [num min max]
+  (and (>= num min) (<= num max)))
+
+(defn update-screen [state]
+  (let [frame-count (q/frame-count)]
+    (cond
+     (is-between frame-count 0 5) (assoc state :current-screen :intro)
+     (is-between frame-count 5 10) (assoc state :current-screen :intro)
+     :else (assoc state :current-screen :instructions))))
+
 (defn update-state [state]
-  (if (= (mod (q/frame-count) 2) 0)
-    (assoc state :current-screen :intro)
-    (assoc state :current-screen :instructions)))
+  (-> state
+    (update-screen)))
 
 (defn draw-screen [screen]
   (q/image (load-image (screen screens)) 0 0 (q/width) (q/height)))
